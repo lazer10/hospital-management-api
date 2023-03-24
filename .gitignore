@@ -1,0 +1,10 @@
+node_modules
+build
+.serverless
+package-lock.json
+.env
+src/dist
+yarn.lock
+yarn-error.log
+tmp
+.nyc_output
