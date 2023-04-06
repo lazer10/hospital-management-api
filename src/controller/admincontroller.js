@@ -1,19 +1,29 @@
-const dotenv = require('dotenv');
+import out from '../helpers/response';
+import config from '../config';
+import { sign } from '../helpers/jwt';
 
-dotenv.config();
-
-class adminController {
+class AdminController {
   static loginAdmin(req, res) {
     try {
       if (!req.body.email || !req.body.password) {
-        return res.send(400, 'Please provide complete details');
+        return out(res, 422, 'Please provide complete details', null, 'VALIDATION_ERROR');
       }
       const { email, password } = req.body;
 
       // Compare entered email and password with the ones in .env file
-      if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+      if (email === config.ADMIN_EMAIL && password === config.ADMIN_PASSWORD) {
         // Return a 200 response if they match
-        return res.status(200).json({ message: 'Login successful!' });
+        const token = sign({
+          email: config.ADMIN_EMAIL,
+          role: 'Admin'
+        });
+        const data = {
+          token,
+          email,
+          role: 'Admin',
+          logginTime: `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`
+        };
+        return out(res, 200, 'Login successful', data);
       }
       // Return a 401 response if they don't match
       return res.status(401).json({ message: 'Invalid email or password.' });
@@ -23,4 +33,4 @@ class adminController {
   }
 }
 
-module.exports = adminController;
+export default AdminController;
