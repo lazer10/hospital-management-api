@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-import Admin from '../controller/admin';
+import AdminController from '../controller/admin';
 
 const router = Router();
-router.post('/', Admin.Adminlogin);
+router.post('/', AdminController.adminLogin);
 
 export default router;

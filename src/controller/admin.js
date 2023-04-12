@@ -1,24 +1,18 @@
 import config from '../config';
 import out from '../helpers/response';
+import { sign } from '../helpers/jwt';
 
-class Admin {
-  static Adminlogin(req, res) {
+class AdminController {
+  static adminLogin(req, res) {
     try {
       const { email, password } = req.body;
       if (!email || !password) {
-        // return res.send(400, 'Please provide complete details');
-        const data = {
-          message: 'please provide complete details',
-          error: 'VALIDATION_ERROR'
-        };
-        return out(res, 422, data);
+        return out(res, 422, 'Please provide complete details', null, 'VALIDATION_ERROR');
       }
-      // Compare entered email and password with the ones in .env file
       if (email !== config.ADMIN_EMAIL || password !== config.ADMIN_PASSWORD) {
-        // Return a 200 response if they match
-        return out(res, 401, 'invalid email or password');
+        return out(res, 400, 'Invalid email or password', null, 'BAD_REQUEST');
       }
-      const token = ({
+      const token = sign({
         email: config.ADMIN_EMAIL,
         role: 'Admin'
       });
@@ -28,11 +22,10 @@ class Admin {
         role: 'Admin',
         logginTime: `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`
       };
-      // Return a 201 response if they match
-      return out(res, 201, 'Login successful', data);
+      return out(res, 200, 'Login successful', data, null);
     } catch (error) {
-      return out(res, 500, 'internal server error');
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
   }
 }
-export default Admin;
+export default AdminController;
