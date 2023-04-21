@@ -1,22 +1,33 @@
-/* eslint-disable import/no-dynamic-require */
 /* eslint-disable global-require */
-import fs from 'fs';
-import path from 'path';
-import Sequelize from 'sequelize';
-import configFile from '../config';
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
+const process = require('process');
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = configFile[env];
+// eslint-disable-next-line import/no-dynamic-require
+const config = require(`${__dirname}/../config`)[env];
 const db = {};
-config.logging = false;
-const sequelize = new Sequelize(process.env[config.use_env_variable], config);
 
-fs.readdirSync(__dirname)
-  .filter((file) => file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js')
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
+
+fs
+  .readdirSync(__dirname)
+  .filter((file) => (
+    file.indexOf('.') !== 0
+      && file !== basename
+      && file.slice(-3) === '.js'
+      && file.indexOf('.test.js') === -1
+  ))
   .forEach((file) => {
-    const modelPath = path.join(__dirname, file);
-    const model = require(modelPath)(sequelize, Sequelize);
+    // eslint-disable-next-line import/no-dynamic-require
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
 
@@ -29,4 +40,4 @@ Object.keys(db).forEach((modelName) => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-export default db;
+module.exports = db;
