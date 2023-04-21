@@ -8,6 +8,14 @@ class departmentservice {
       throw error;
     }
   }
+
+  static async findDepartment(newDepartment) {
+    try {
+      return await data.Department.findOne(newDepartment);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default departmentservice;

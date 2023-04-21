@@ -5,5 +5,5 @@ import department from './department';
 const router = Router();
 
 router.use('/admin', admin);
-router.use('/department', department);
+router.use('/departments', department);
 export default router;
