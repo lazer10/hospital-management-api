@@ -17,6 +17,7 @@
         "comma-dangle": 0,
         "no-useless-catch": 0,
         "no-underscore-dangle": 0,
-        "linebreak-style": 0
+        "linebreak-style": 0,
+        "camelcase": 0
     }
 }

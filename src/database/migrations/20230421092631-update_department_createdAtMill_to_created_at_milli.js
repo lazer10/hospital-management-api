@@ -1,9 +1,9 @@
 module.exports = {
   up: async (queryInterface) => {
-    await queryInterface.renameColumn('departments', 'createdAtMill', 'created_at_milli');
+    await queryInterface.renameColumn('Departments', 'CreatedAtMilli', 'created_at_milli');
   },
 
   down: async (queryInterface) => {
-    await queryInterface.renameColumn('departments', 'created_at_milli', 'createdAtMill');
+    await queryInterface.renameColumn('Departments', 'created_at_milli', 'CreatedAtMilli');
   }
 };

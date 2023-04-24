@@ -1,8 +1,10 @@
 import { Router } from 'express';
-
 import Departmentcontroller from '../controller/department';
+import * as Validations from '../middlewares/validation/department';
+import * as Authorization from '../middlewares/authorization';
 
 const router = Router();
-router.post('/create', Departmentcontroller.addDepartment);
+
+router.post('/new', Authorization.isAdmin, Validations.addDepartment, Departmentcontroller.addDepartment);
 
 export default router;
