@@ -6,9 +6,9 @@ class AdminController {
   static adminLogin(req, res) {
     try {
       const { email, password } = req.body;
-      if (!email || !password) {
-        return out(res, 422, 'Please provide complete details', null, 'VALIDATION_ERROR');
-      }
+      // if (!email || !password) {
+      //   return out(res, 422, 'Please provide complete details', null, 'VALIDATION_ERROR');
+      // }
       if (email !== config.ADMIN_EMAIL || password !== config.ADMIN_PASSWORD) {
         return out(res, 400, 'Invalid email or password', null, 'BAD_REQUEST');
       }

@@ -6,5 +6,6 @@ import * as Authorization from '../middlewares/authorization';
 const router = Router();
 
 router.post('/new', Authorization.isAdmin, Validations.addDepartment, Departmentcontroller.addDepartment);
+router.get('/', Departmentcontroller.fetchAllDepartments);
 
 export default router;
