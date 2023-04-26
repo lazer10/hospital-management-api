@@ -24,6 +24,14 @@ class departmentservice {
       throw error;
     }
   }
+
+  static async fecthDepartmentwithID(id) {
+    try {
+      return await data.Department.findOne({ where: { id: Number(id) } });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default departmentservice;
