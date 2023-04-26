@@ -19,7 +19,7 @@ class DepartmentController {
   static async fetchAllDepartments(req, res) {
     try {
       const allDepartments = await DepartmentService.fecthDepartments();
-      if (allDepartments.length === 0) return out(res, 404, 'No book found', null, 'NOT_FOUND');
+      if (allDepartments.length === 0) return out(res, 404, 'No department found', null, 'NOT_FOUND');
 
       return out(res, 200, 'Departments retrieved successfully', allDepartments, null);
     } catch (error) {
