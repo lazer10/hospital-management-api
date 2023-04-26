@@ -16,6 +16,14 @@ class departmentservice {
       throw error;
     }
   }
+
+  static async fecthDepartments() {
+    try {
+      return await data.Department.findAll();
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default departmentservice;
