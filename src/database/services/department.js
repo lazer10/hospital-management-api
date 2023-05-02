@@ -32,6 +32,23 @@ class departmentservice {
       throw error;
     }
   }
+
+  static async updateDepartment(id, updateDepartment) {
+    try {
+      const departmentToUpdate = await data.Department.findOne({
+        where: { id: Number(id) }
+      });
+
+      if (departmentToUpdate) {
+        await data.Department.update(updateDepartment, { where: { id: Number(id) } });
+
+        return updateDepartment;
+      }
+      return null;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default departmentservice;
