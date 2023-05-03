@@ -52,12 +52,14 @@ class DepartmentController {
       if (!Number(id)) {
         return out(res, 400, 'Please use numerics to search!', null, 'BAD_REQUEST');
       }
-
-      // eslint-disable-next-line max-len
-      const updateDepartment = await DepartmentService.updateDepartment(id, updatedDepartment);
-      if (!updateDepartment) {
+      const departmentExist = await DepartmentService.findDepartment({
+        where: { id: Number(id) }
+      });
+      if (!departmentExist) {
         return out(res, 404, `Whoops! We can't find department with this id ${id}!`, null, 'NOT_FOUND');
       }
+
+      const updateDepartment = await DepartmentService.updateDepartment(id, updatedDepartment);
       return out(res, 200, `Department with id ${id} successfully updated!`, updateDepartment);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
