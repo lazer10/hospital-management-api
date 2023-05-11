@@ -1,16 +1,10 @@
-const {
-  Model
-} = require('sequelize');
+// eslint-disable-next-line import/no-import-module-exports
+import { Model } from 'sequelize';
 
 module.exports = (sequelize, DataTypes) => {
   class Department extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate() {
-      // define association here
+    static associate({ Doctor }) {
+      this.hasMany(Doctor, { foreignKey: 'departments' });
     }
   }
   Department.init({
