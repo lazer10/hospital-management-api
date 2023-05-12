@@ -1,7 +1,8 @@
-import bcrypt from 'bcryptjs';
+import { generate } from '../helpers/bcrypt';
 import DepartmentService from '../database/services/department';
 import DoctorService from '../database/services/doctor';
 import out from '../helpers/response';
+import generateRandomNumber from '../helpers/randomNumber';
 
 class DoctorController {
   static async addDoctor(req, res) {
@@ -9,30 +10,30 @@ class DoctorController {
       const {
         firstName, lastName, email, departments
       } = req.body;
-      const password = Math.random().toString(36).substring(2, 8);
-      const hashedPassword = await bcrypt.hash(password, 10);
 
       const emailExist = await DoctorService.findDoctor({ where: { email } });
       if (emailExist) return out(res, 409, `The doctor with this Email ${email}  already exist!`, null, 'CONFLICT_ERROR');
 
-      const thedepartments = await DepartmentService.findDepartment({
+      const password = generateRandomNumber.generateRandomNumber();
+      const hashedPassword = await generate(password);
+
+      const theDepartments = await DepartmentService.findDepartment({
         where: { id: departments }
       });
 
-      if (!thedepartments) return out(res, 404, `Departments with Id ${departments} does't exist!`, null, 'NOT_FOUND_ERROR');
+      if (!theDepartments) return out(res, 404, `Departments with Id ${departments} does't exist!`, null, 'NOT_FOUND_ERROR');
 
       const doctor = await DoctorService.addDoctor({
         firstName,
         lastName,
         email,
-        password: hashedPassword,
         departments,
+        password: hashedPassword,
         isVerified: false
       });
 
-      await doctor.thedepartments;
       const data = {
-        doctor, hashedPassword
+        doctor
       };
       return out(res, 201, 'Doctor successfully added', data);
     } catch (error) {

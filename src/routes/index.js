@@ -7,5 +7,5 @@ const router = Router();
 
 router.use('/admin', admin);
 router.use('/departments', department);
-router.use('/doctor', doctor);
+router.use('/doctors', doctor);
 export default router;

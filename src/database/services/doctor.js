@@ -1,7 +1,7 @@
 import model from '../models';
 
 const { Doctor } = model;
-class departmentservice {
+class DepartmentService {
   static async addDoctor(newDoctor) {
     try {
       return await Doctor.create(newDoctor);
@@ -17,13 +17,5 @@ class departmentservice {
       throw error;
     }
   }
-
-  static async findAll(newDoctor) {
-    try {
-      return await Doctor.findOne(newDoctor);
-    } catch (error) {
-      throw error;
-    }
-  }
 }
-export default departmentservice;
+export default DepartmentService;
