@@ -2,7 +2,7 @@ import { generate } from '../helpers/bcrypt';
 import DepartmentService from '../database/services/department';
 import DoctorService from '../database/services/doctor';
 import out from '../helpers/response';
-import generateRandomNumber from '../helpers/randomNumber';
+import GenerateRandomNumber from '../helpers/randomNumber';
 
 class DoctorController {
   static async addDoctor(req, res) {
@@ -14,7 +14,7 @@ class DoctorController {
       const emailExist = await DoctorService.findDoctor({ where: { email } });
       if (emailExist) return out(res, 409, `The doctor with this Email ${email}  already exist!`, null, 'CONFLICT_ERROR');
 
-      const password = generateRandomNumber.generateRandomNumber();
+      const password = GenerateRandomNumber.GenerateRandomNumber();
       const hashedPassword = await generate(password);
 
       const theDepartments = await DepartmentService.findDepartment({
@@ -32,10 +32,7 @@ class DoctorController {
         isVerified: false
       });
 
-      const data = {
-        doctor
-      };
-      return out(res, 201, 'Doctor successfully added', data);
+      return out(res, 201, 'Doctor successfully added', doctor);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
