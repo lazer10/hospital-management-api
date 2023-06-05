@@ -6,7 +6,9 @@
 
 Run
 `yarn install` or `npm i`
-`npx cli sequelize`
+`npm install --save-dev sequelize-cli`
+`npx sequelize --help`
+`npm run dev`
 
 ### .env
 Create a .env file in the root directory and paste in this
@@ -29,6 +31,8 @@ ADMIN_PASSWORD=
 - [Fetch All Department](#3-Fetch-All-Department-get-request)
 - [Fetch Department By Id](#3-Fetch-Department-By-Id-get-request)
 
+### Doctor
+- [Add Doctor](#1-Add-Doctor-post-request)
 
 ### 1. Admin Login: POST Request
 
@@ -135,6 +139,44 @@ Response
         "created_at_milli": "1683967979665",
         "createdAt": "2023-05-13T08:52:59.669Z",
         "updatedAt": "2023-05-13T08:52:59.669Z"
+    }
+}
+```
+### 1. Add Doctor: POST Request
+
+End Point
+```
+/api/doctors/new
+```
+
+Body
+```json
+{
+    "firstName":"rush",
+     "lastName":"jon",
+     "email":"alainotui@mail.com",
+     "departments":["ecf93aaf-26d8-4c59-9a76-377325b6f187","cac44f0c-695e-42cf-8b6e-4a1c52ea16db"]
+}
+```
+Response
+```json
+{
+    "status": 201,
+    "message": "Doctor successfully added",
+    "data": {
+        "doctor": {
+            "id": "a7258965-c137-452d-a43a-7c095fee0be9",
+            "firstName": "rush",
+            "lastName": "jon",
+            "email": "alainotxi@mail.com",
+            "departments": [
+                "ecf93aaf-26d8-4c59-9a76-377325b6f187",
+                "cac44f0c-695e-42cf-8b6e-4a1c52ea16db"
+            ],
+            "isVerified": false,
+            "updatedAt": "2023-06-05T09:16:59.431Z",
+            "createdAt": "2023-06-05T09:16:59.431Z"
+        }
     }
 }
 ```

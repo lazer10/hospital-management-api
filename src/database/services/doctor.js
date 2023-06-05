@@ -1,10 +1,9 @@
-import model from '../models';
+import data from '../models';
 
-const { Doctor } = model;
 class DepartmentService {
   static async addDoctor(newDoctor) {
     try {
-      return await Doctor.create(newDoctor);
+      return await data.Doctor.create(newDoctor);
     } catch (error) {
       throw error;
     }
@@ -12,7 +11,7 @@ class DepartmentService {
 
   static async findDoctor(newDoctor) {
     try {
-      return await Doctor.findOne(newDoctor);
+      return await data.Doctor.findOne(newDoctor);
     } catch (error) {
       throw error;
     }
