@@ -6,9 +6,12 @@
 
 Run
 `yarn install` or `npm i`
-`npm install --save-dev sequelize-cli`
-`npx sequelize --help`
 `npm run dev`
+
+### Sequelize Initiation
+
+`npx sequelize db:migrate`
+`npx sequelize --help`
 
 ### .env
 Create a .env file in the root directory and paste in this
@@ -24,15 +27,15 @@ ADMIN_PASSWORD=
 ## Routes Menu
 
 ### Admin
-- [Admin Login](#1-admin-login-post-request)
+- [Admin Login](#1-Admin-Login-Post-Request)
 
 ### Department
-- [Add Department](#2-Add-Department-post-request)
-- [Fetch All Department](#3-Fetch-All-Department-get-request)
-- [Fetch Department By Id](#3-Fetch-Department-By-Id-get-request)
+- [Add Department](#2-Add-Department-Post-Request)
+- [Fetch All Department](#3-Fetch-All-Department-Get-Request)
+- [Fetch Department By Id](#3-Fetch-Department-By-Id-Get-Request)
 
 ### Doctor
-- [Add Doctor](#1-Add-Doctor-post-request)
+- [Add Doctor](#1-Add-Doctor-Post-Request)
 
 ### 1. Admin Login: POST Request
 

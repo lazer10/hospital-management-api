@@ -1,4 +1,4 @@
 import { v4 as uuid } from 'uuid';
 
-const generator = () => uuid();
-export default generator;
+// eslint-disable-next-line import/prefer-default-export
+export const generator = () => uuid();

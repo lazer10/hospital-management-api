@@ -1,4 +1,4 @@
-import generator from '../helpers/uuid';
+import { generator } from '../helpers/uuid';
 import DepartmentService from '../database/services/department';
 import out from '../helpers/response';
 
@@ -31,7 +31,7 @@ class DepartmentController {
   static async fetchDepartmentById(req, res) {
     try {
       const { id } = req.params;
-      if (id && !generator(id)) {
+      if (id && !generator()) {
         return out(res, 400, 'Please use a valid UUID format to search!', null, 'BAD_REQUEST');
       }
 

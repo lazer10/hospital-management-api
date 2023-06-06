@@ -14,13 +14,14 @@ class DoctorController {
       const emailExist = await DoctorService.findDoctor({ where: { email } });
       if (emailExist) return out(res, 409, `The doctor with this Email ${email}  already exist!`, null, 'CONFLICT_ERROR');
 
-      const password = generateRandomNumber();
-      const hashedPassword = await generate(password);
-
       const theDepartments = await DepartmentService.fetchDepartmentsByIds(departments);
       if (!theDepartments) {
         return out(res, 400, 'One or more departments do not exist!', null, 'BAD_REQUEST');
       }
+
+      const password = generateRandomNumber();
+      const hashedPassword = await generate(password);
+
       const doctor = await DoctorService.addDoctor({
         firstName,
         lastName,
@@ -29,9 +30,10 @@ class DoctorController {
         password: hashedPassword,
         isVerified: false
       });
-      const { password: _, ...doctorWithoutPassword } = doctor.dataValues;
 
+      const { password: _, ...doctorWithoutPassword } = doctor.dataValues;
       const data = { doctor: doctorWithoutPassword };
+
       return out(res, 201, 'Doctor successfully added', data);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
