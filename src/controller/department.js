@@ -31,7 +31,7 @@ class DepartmentController {
   static async fetchDepartmentById(req, res) {
     try {
       const { id } = req.params;
-      if (id && !generator()) {
+      if (!id) {
         return out(res, 400, 'Please use a valid UUID format to search!', null, 'BAD_REQUEST');
       }
 
