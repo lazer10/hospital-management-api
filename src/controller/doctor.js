@@ -11,23 +11,18 @@ class DoctorController {
         firstName, lastName, email, departments
       } = req.body;
 
+      const departmentDuplicates = departments.filter(
+        (item, index) => departments.indexOf(item) !== index
+      );
+      if (departmentDuplicates.length > 0) {
+        return out(res, 400, 'There is duplicates in departments array', null, 'BAD_REQUEST');
+      }
+
       const emailExist = await DoctorService.findDoctor({ where: { email } });
       if (emailExist) return out(res, 409, `The doctor with this Email ${email}  already exist!`, null, 'CONFLICT_ERROR');
 
-      /* const theDepartments = await DepartmentService.fetchDepartmentsByIds(departments);
-      if (!theDepartments.length !== departments.length) {
-        return out(res, 400, 'One or more departments do not exist!', null, 'BAD_REQUEST');
-      } */
-
-      const existingDepartments = await DepartmentService.fetchDepartmentsByIds(departments);
-
-      const existingDepartmentIds = new Set(existingDepartments.map((department) => department.id));
-      const missingDepartments = departments.filter(
-        (departmentId) => !existingDepartmentIds.has(departmentId)
-      );
-
-      if (missingDepartments.length > 0) {
-        // Some departments do not exist
+      const theDepartments = await DepartmentService.fetchDepartmentsByIds(departments);
+      if (theDepartments.length !== departments.length) {
         return out(res, 400, 'One or more departments do not exist!', null, 'BAD_REQUEST');
       }
 
@@ -44,9 +39,8 @@ class DoctorController {
       });
 
       const { password: _, ...doctorWithoutPassword } = doctor.dataValues;
-      const data = { doctor: doctorWithoutPassword };
 
-      return out(res, 201, 'Doctor successfully added', data);
+      return out(res, 201, 'Doctor successfully added', doctorWithoutPassword);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }

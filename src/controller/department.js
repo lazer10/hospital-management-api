@@ -1,4 +1,4 @@
-import { generator } from '../helpers/uuid';
+import { isUuidValid } from '../helpers/uuid';
 import DepartmentService from '../database/services/department';
 import out from '../helpers/response';
 
@@ -31,11 +31,9 @@ class DepartmentController {
   static async fetchDepartmentById(req, res) {
     try {
       const { id } = req.params;
-      if (!id) {
+      if (!id || !isUuidValid(id)) {
         return out(res, 400, 'Please use a valid UUID format to search!', null, 'BAD_REQUEST');
       }
-
-      // eslint-disable-next-line max-len
       const singleDepartment = await DepartmentService.fecthDepartmentwithID(id);
       if (!singleDepartment) {
         return out(res, 404, `Whoops! We can't find department with this id ${id}!`, null, 'NOT_FOUND');
