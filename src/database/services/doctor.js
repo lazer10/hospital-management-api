@@ -16,5 +16,15 @@ class DepartmentService {
       throw error;
     }
   }
+
+  static async findDoctors() {
+    try {
+      return await data.Doctor.findAll({
+        attributes: { exclude: ['id', 'password', 'createdAt', 'updatedAt'] }
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export default DepartmentService;
