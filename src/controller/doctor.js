@@ -14,8 +14,20 @@ class DoctorController {
       const emailExist = await DoctorService.findDoctor({ where: { email } });
       if (emailExist) return out(res, 409, `The doctor with this Email ${email}  already exist!`, null, 'CONFLICT_ERROR');
 
-      const theDepartments = await DepartmentService.fetchDepartmentsByIds(departments);
-      if (!theDepartments) {
+      /* const theDepartments = await DepartmentService.fetchDepartmentsByIds(departments);
+      if (!theDepartments.length !== departments.length) {
+        return out(res, 400, 'One or more departments do not exist!', null, 'BAD_REQUEST');
+      } */
+
+      const existingDepartments = await DepartmentService.fetchDepartmentsByIds(departments);
+
+      const existingDepartmentIds = new Set(existingDepartments.map((department) => department.id));
+      const missingDepartments = departments.filter(
+        (departmentId) => !existingDepartmentIds.has(departmentId)
+      );
+
+      if (missingDepartments.length > 0) {
+        // Some departments do not exist
         return out(res, 400, 'One or more departments do not exist!', null, 'BAD_REQUEST');
       }
 
