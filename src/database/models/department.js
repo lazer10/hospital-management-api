@@ -4,16 +4,17 @@ const {
 
 module.exports = (sequelize, DataTypes) => {
   class Department extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate() {
-      // define association here
+    static associate(models) {
+      Department.hasMany(models.Doctor, { foreignKey: 'departments' });
     }
   }
   Department.init({
+    id: {
+      primaryKey: true,
+      allowNull: false,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.literal('gen_random_uuid()')
+    },
     name: DataTypes.STRING,
     created_at_milli: DataTypes.BIGINT
   }, {

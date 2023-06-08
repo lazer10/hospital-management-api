@@ -4,14 +4,14 @@ module.exports = {
     await queryInterface.createTable('Departments', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        defaultValue: Sequelize.literal('gen_random_uuid()'),
+        type: Sequelize.UUID
       },
       name: {
         type: Sequelize.STRING
       },
-      CreatedAtMilli: {
+      created_at_milli: {
         type: Sequelize.BIGINT
       },
       createdAt: {

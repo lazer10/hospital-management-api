@@ -17,6 +17,16 @@ class departmentservice {
     }
   }
 
+  static async fetchDepartmentsByIds(departments) {
+    try {
+      return await data.Department.findAll({
+        where: { id: departments }
+      });
+    } catch (error) {
+      throw Error;
+    }
+  }
+
   static async fecthDepartments() {
     try {
       return await data.Department.findAll();
@@ -27,7 +37,7 @@ class departmentservice {
 
   static async fecthDepartmentwithID(id) {
     try {
-      return await data.Department.findOne({ where: { id: Number(id) } });
+      return await data.Department.findOne({ where: { id } });
     } catch (error) {
       throw error;
     }

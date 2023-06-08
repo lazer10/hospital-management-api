@@ -1,4 +1,6 @@
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid, validate } from 'uuid';
 
-const generator = () => uuid();
-export default { generator };
+// eslint-disable-next-line import/prefer-default-export
+export const generator = () => uuid();
+
+export const isUuidValid = (uuidString) => validate(uuidString);
