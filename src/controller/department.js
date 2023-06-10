@@ -1,3 +1,4 @@
+import { isUuidValid } from '../helpers/uuid';
 import DepartmentService from '../database/services/department';
 import out from '../helpers/response';
 
@@ -30,11 +31,10 @@ class DepartmentController {
   static async fetchDepartmentById(req, res) {
     try {
       const { id } = req.params;
-      if (!id) {
+      if (!id || !isUuidValid(id)) {
         return out(res, 400, 'Please use a valid UUID format to search!', null, 'BAD_REQUEST');
       }
 
-      // eslint-disable-next-line max-len
       const singleDepartment = await DepartmentService.fecthDepartmentwithID(id);
       if (!singleDepartment) {
         return out(res, 404, `Whoops! We can't find department with this id ${id}!`, null, 'NOT_FOUND');
@@ -45,20 +45,20 @@ class DepartmentController {
     }
   }
 
-  static async updatedDepertment(req, res) {
+  static async updateDepertmentById(req, res) {
     try {
       const alteredDepartment = req.body;
       const { id } = req.params;
-      if (!id) {
+      if (!id || isUuidValid(id)) {
         return out(res, 400, 'Please use a valid UUID format to search! ', null, 'BAD_REQUEST');
       }
 
-      const updateBook = await DepartmentService.updateDepartment(id, alteredDepartment);
+      const updateDepartment = await DepartmentService.updateDepartment(id, alteredDepartment);
 
-      if (!updateBook) {
+      if (!updateDepartment) {
         return out(res, 404, 'Whoops! We can\'t find department!', null, 'NOT_FOUND');
       }
-      return out(res, 200, 'Department with successfully updated!', updateBook);
+      return out(res, 200, 'Department with successfully updated!', updateDepartment);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
