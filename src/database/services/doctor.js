@@ -1,6 +1,6 @@
 import data from '../models';
 
-class DepartmentService {
+class DoctorService {
   static async addDoctor(newDoctor) {
     try {
       return await data.Doctor.create(newDoctor);
@@ -27,4 +27,4 @@ class DepartmentService {
     }
   }
 }
-export default DepartmentService;
+export default DoctorService;
