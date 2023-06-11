@@ -1,5 +1,4 @@
-import bcrypt from 'bcryptjs/dist/bcrypt';
-import { generate } from '../helpers/bcrypt';
+import { generate, check } from '../helpers/bcrypt';
 import DepartmentService from '../database/services/department';
 import DoctorService from '../database/services/doctor';
 import out from '../helpers/response';
@@ -55,7 +54,7 @@ class DoctorController {
       const doctorExist = await DoctorService.findDoctor({ where: { email } });
       if (!doctorExist) return out(res, 404, 'Invalid email or password', null, 'BAD_REQUEST');
 
-      const validPassword = await bcrypt.compare(password, doctorExist.password);
+      const validPassword = await check(doctorExist.password, password);
 
       if (!validPassword) return out(res, 404, 'Invalid email or password', null, 'BAD_REQUEST');
 

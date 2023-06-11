@@ -35,7 +35,7 @@ class DepartmentController {
         return out(res, 400, 'Please use a valid UUID format to search!', null, 'BAD_REQUEST');
       }
 
-      const singleDepartment = await DepartmentService.fecthDepartmentwithID(id);
+      const singleDepartment = await DepartmentService.fetchDepartment(id);
       if (!singleDepartment) {
         return out(res, 404, `Whoops! We can't find department with this id ${id}!`, null, 'NOT_FOUND');
       }
@@ -49,7 +49,7 @@ class DepartmentController {
     try {
       const alteredDepartment = req.body;
       const { id } = req.params;
-      if (!id || isUuidValid(id)) {
+      if (!id || !isUuidValid(id)) {
         return out(res, 400, 'Please use a valid UUID format to search! ', null, 'BAD_REQUEST');
       }
 

@@ -35,7 +35,7 @@ class departmentservice {
     }
   }
 
-  static async fecthDepartmentwithID(id) {
+  static async fetchDepartment(id) {
     try {
       return await data.Department.findOne({ where: { id } });
     } catch (error) {
