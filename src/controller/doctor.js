@@ -52,11 +52,9 @@ class DoctorController {
       const { email, password } = req.body;
 
       const doctorExist = await DoctorService.findDoctor({ where: { email } });
-      if (!doctorExist) return out(res, 404, 'Invalid email or password', null, 'BAD_REQUEST');
-
       const validPassword = await check(doctorExist.password, password);
 
-      if (!validPassword) return out(res, 404, 'Invalid email or password', null, 'BAD_REQUEST');
+      if (!doctorExist || !validPassword) return out(res, 400, 'Invalid email or password', null, 'BAD_REQUEST');
 
       const token = sign({
         email: doctorExist.email,
