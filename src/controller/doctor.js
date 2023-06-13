@@ -51,8 +51,14 @@ class DoctorController {
     try {
       const { email, password } = req.body;
 
+      if (!email || !password) {
+        return out(res, 422, 'One of the fields is empty or not provided', null, 'VALIDATION_ERROR');
+      }
       const doctorExist = await DoctorService.findDoctor({ where: { email } });
-      const validPassword = await check(doctorExist.password, password);
+      let validPassword;
+      if (doctorExist) {
+        validPassword = await check(doctorExist.password, password);
+      }
 
       if (!doctorExist || !validPassword) return out(res, 400, 'Invalid email or password', null, 'BAD_REQUEST');
 
