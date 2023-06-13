@@ -34,7 +34,8 @@ class DepartmentController {
       if (!id || !isUuidValid(id)) {
         return out(res, 400, 'Please use a valid UUID format to search!', null, 'BAD_REQUEST');
       }
-      const singleDepartment = await DepartmentService.fecthDepartmentwithID(id);
+
+      const singleDepartment = await DepartmentService.fetchDepartment(id);
       if (!singleDepartment) {
         return out(res, 404, `Whoops! We can't find department with this id ${id}!`, null, 'NOT_FOUND');
       }
@@ -46,20 +47,18 @@ class DepartmentController {
 
   static async updateDepartmentById(req, res) {
     try {
-      const updatedDepartment = req.body;
+      const alteredDepartment = req.body;
       const { id } = req.params;
-      if (!Number(id)) {
-        return out(res, 400, 'Please use numerics to search!', null, 'BAD_REQUEST');
-      }
-      const departmentExist = await DepartmentService.findDepartment({
-        where: { id: Number(id) }
-      });
-      if (!departmentExist) {
-        return out(res, 404, `Whoops! We can't find department with this id ${id}!`, null, 'NOT_FOUND');
+      if (!id || !isUuidValid(id)) {
+        return out(res, 400, 'Please use a valid UUID format to search! ', null, 'BAD_REQUEST');
       }
 
-      const updateDepartment = await DepartmentService.updateDepartment(id, updatedDepartment);
-      return out(res, 200, `Department with id ${id} successfully updated!`, updateDepartment);
+      const updatedDepartment = await DepartmentService.updateDepartment(id, alteredDepartment);
+
+      if (!updatedDepartment) {
+        return out(res, 404, 'Whoops! We can\'t find department!', null, 'NOT_FOUND');
+      }
+      return out(res, 200, 'Department with successfully updated!', updatedDepartment);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }

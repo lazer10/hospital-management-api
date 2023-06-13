@@ -1,8 +1,9 @@
-import { generate } from '../helpers/bcrypt';
+import { generate, check } from '../helpers/bcrypt';
 import DepartmentService from '../database/services/department';
 import DoctorService from '../database/services/doctor';
 import out from '../helpers/response';
 import { generateRandomNumber } from '../helpers/randomNumber';
+import { sign } from '../helpers/jwt';
 
 class DoctorController {
   static async addDoctor(req, res) {
@@ -41,6 +42,37 @@ class DoctorController {
       const { password: _, ...doctorWithoutPassword } = doctor.dataValues;
 
       return out(res, 201, 'Doctor successfully added', doctorWithoutPassword);
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
+    }
+  }
+
+  static async doctorLogin(req, res) {
+    try {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return out(res, 422, 'One of the fields is empty or not provided', null, 'VALIDATION_ERROR');
+      }
+      const doctorExist = await DoctorService.findDoctor({ where: { email } });
+      let validPassword;
+      if (doctorExist) {
+        validPassword = await check(doctorExist.password, password);
+      }
+
+      if (!doctorExist || !validPassword) return out(res, 400, 'Invalid email or password', null, 'BAD_REQUEST');
+
+      const token = sign({
+        email: doctorExist.email,
+        role: 'Doctor'
+      });
+      const data = {
+        token,
+        email,
+        role: 'Doctor',
+        logginTime: `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`
+      };
+      return out(res, 200, 'Login successful', data);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }

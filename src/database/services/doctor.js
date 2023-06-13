@@ -1,6 +1,6 @@
 import data from '../models';
 
-class DepartmentService {
+class DoctorService {
   static async addDoctor(newDoctor) {
     try {
       return await data.Doctor.create(newDoctor);
@@ -16,5 +16,15 @@ class DepartmentService {
       throw error;
     }
   }
+
+  static async findDoctors() {
+    try {
+      return await data.Doctor.findAll({
+        attributes: { exclude: ['id', 'password', 'createdAt', 'updatedAt'] }
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
-export default DepartmentService;
+export default DoctorService;
