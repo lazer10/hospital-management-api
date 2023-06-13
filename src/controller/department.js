@@ -45,7 +45,7 @@ class DepartmentController {
     }
   }
 
-  static async updateDepertmentById(req, res) {
+  static async updateDepartmentById(req, res) {
     try {
       const alteredDepartment = req.body;
       const { id } = req.params;
@@ -53,12 +53,12 @@ class DepartmentController {
         return out(res, 400, 'Please use a valid UUID format to search! ', null, 'BAD_REQUEST');
       }
 
-      const updateDepartment = await DepartmentService.updateDepartment(id, alteredDepartment);
+      const updatedDepartment = await DepartmentService.updateDepartment(id, alteredDepartment);
 
-      if (!updateDepartment) {
+      if (!updatedDepartment) {
         return out(res, 404, 'Whoops! We can\'t find department!', null, 'NOT_FOUND');
       }
-      return out(res, 200, 'Department with successfully updated!', updateDepartment);
+      return out(res, 200, 'Department with successfully updated!', updatedDepartment);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }

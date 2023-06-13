@@ -10,5 +10,5 @@ router.post('/new', Authorization.isAdmin, Validations.addDepartment, Department
 router.get('/', DepartmentController.fetchAllDepartments);
 router.get('/:id', DepartmentController.fetchDepartmentById);
 
-router.put('/:id', Authorization.isAdmin, Validations.addDepartment, DepartmentController.updateDepertmentById);
+router.put('/:id', Authorization.isAdmin, Validations.updateDepartment, DepartmentController.updateDepartmentById);
 export default router;
