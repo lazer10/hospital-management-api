@@ -1,6 +1,6 @@
 import config from '../config';
 import out from '../helpers/response';
-import { signs } from '../helpers/jwt';
+import { sign } from '../helpers/jwt';
 
 class AdminController {
   static adminLogin(req, res) {
