@@ -100,7 +100,7 @@ class DoctorController {
         return out(res, 200, 'Doctor profile retrieved successfully', doctorProfile);
       } catch (error) {
         if (error instanceof jwt.JsonWebTokenError) {
-          return out(res, 401, 'Invalid token', null, 'INVALID_TOKEN');
+          return out(res, 401, 'Invalid token', null, 'AUTHENTICATION_ERROR');
         }
         throw error;
       }
