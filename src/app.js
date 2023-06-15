@@ -14,6 +14,12 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.set('view engine', 'ejs');
+
+app.get('/ejs', (req, res) => {
+  res.render('pages/index');
+});
+
 app.use(fileupload({ useTempFiles: true }));
 app.use('/api', routes);
 

@@ -4,6 +4,8 @@ import DoctorService from '../database/services/doctor';
 import out from '../helpers/response';
 import { generateRandomNumber } from '../helpers/randomNumber';
 import { sign } from '../helpers/jwt';
+import mailer from '../helpers/mailer';
+import config from '../config';
 
 class DoctorController {
   static async addDoctor(req, res) {
@@ -40,7 +42,16 @@ class DoctorController {
       });
 
       const { password: _, ...doctorWithoutPassword } = doctor.dataValues;
-
+      const emailSent = await mailer(
+        'doctor-registration',
+        {
+          email: doctor.email,
+          password,
+          name: `${doctor.firstName} ${doctor.lastName}`
+        },
+        config.SENDGRID_EMAIL_RECEIVER
+      );
+      if (!emailSent) throw Error('Error sending the email');
       return out(res, 201, 'Doctor successfully added', doctorWithoutPassword);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');

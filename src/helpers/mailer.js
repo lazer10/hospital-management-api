@@ -4,7 +4,7 @@ import path from 'path';
 import nodemailer from 'nodemailer';
 import config from '../config';
 
-const mailer = async (emailToSend) => {
+const mailer = async (usage, emailData, receiverEmail) => {
   try {
     const transporter = await nodemailer.createTransport({
       host: config.SMTP_HOST,
@@ -17,16 +17,19 @@ const mailer = async (emailToSend) => {
 
     let template;
     let subject;
-    switch (emailToSend[0]) {
+    switch (usage) {
+      case 'doctor-registration':
+        template = '../public/templates/doctorRegistration.ejs';
+        subject = 'Doctor Registration';
+        break;
       default:
         template = '';
     }
-
-    const data = await ejs.renderFile(path.join(__dirname, template), emailToSend[1]);
+    const data = await ejs.renderFile(path.join(__dirname, template), emailData);
 
     const emailOptions = {
-      from: '"LZ-KZ Support" <support@lz-kz.app>',
-      to: emailToSend[2],
+      from: 'kennyruzindana@proqio.com',
+      to: receiverEmail,
       subject,
       html: data
     };
