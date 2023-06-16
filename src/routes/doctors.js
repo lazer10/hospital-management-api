@@ -7,5 +7,6 @@ const router = Router();
 
 router.post('/new', Authorization.isAdmin, Validations.addDoctor, DoctorController.addDoctor);
 router.post('/login', DoctorController.doctorLogin);
-router.get('/profiles', DoctorController.getDoctorProfile);
+
+router.get('/profiles', Authorization.auth, DoctorController.getDoctorProfile);
 export default router;

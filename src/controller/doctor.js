@@ -1,11 +1,9 @@
-import jwt from 'jsonwebtoken';
 import { generate, check } from '../helpers/bcrypt';
 import DepartmentService from '../database/services/department';
 import DoctorService from '../database/services/doctor';
 import out from '../helpers/response';
 import { generateRandomNumber } from '../helpers/randomNumber';
 import { sign } from '../helpers/jwt';
-import { decodeToken } from '../middlewares/authorization';
 
 class DoctorController {
   static async addDoctor(req, res) {
@@ -82,28 +80,14 @@ class DoctorController {
 
   static async getDoctorProfile(req, res) {
     try {
-      const token = req.headers.authorization;
+      const decodedToken = req.user;
 
-      if (!token) {
-        return out(res, 401, 'Token not provided', null, 'AUTHENTICATION_ERROR');
-      }
+      const doctorProfile = {
+        email: decodedToken.email,
+        role: decodedToken.role
+      };
 
-      let decodedToken;
-      try {
-        decodedToken = decodeToken(req);
-
-        const doctorProfile = {
-          email: decodedToken.email,
-          role: decodedToken.role
-        };
-
-        return out(res, 200, 'Doctor profile retrieved successfully', doctorProfile);
-      } catch (error) {
-        if (error instanceof jwt.JsonWebTokenError) {
-          return out(res, 401, 'Invalid token', null, 'AUTHENTICATION_ERROR');
-        }
-        throw error;
-      }
+      return out(res, 200, 'Doctor profile retrieved successfully', doctorProfile);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
