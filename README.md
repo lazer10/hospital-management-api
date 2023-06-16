@@ -22,6 +22,11 @@ JWT_SECRET=
 DEV_DATABASE_URL=
 ADMIN_EMAIL=
 ADMIN_PASSWORD=
+SMTP_HOST=smtp.sendgrid.net
+SMTP_PORT=25
+SMTP_USER=apikey
+SMTP_PASS=
+SENDGRID_EMAIL_RECEIVER=
 ```
 
 ## Routes Menu
@@ -30,12 +35,16 @@ ADMIN_PASSWORD=
 - [Admin Login](#1-Admin-Login-Post-Request)
 
 ### Department
-- [Add Department](#2-Add-Department-Post-Request)
-- [Fetch All Department](#3-Fetch-All-Department-Get-Request)
-- [Fetch Department By Id](#3-Fetch-Department-By-Id-Get-Request)
+- [Add Department](#2-Add-Departments-Post-Request)
+- [Fetch All Department](#3-Fetch-All-Departments-Get-Request)
+- [Fetch Department By Id](#3-Fetch-Departments-By-Id-Get-Request)
+- [Update Department By Id](#4-Update-Departments-By-Id-Put-Request)
 
 ### Doctor
-- [Add Doctor](#1-Add-Doctor-Post-Request)
+- [Add Doctor](#1-Add-Doctors-Post-Request)
+- [Doctor Login](#2-Doctors-Login-Post-Request)
+- [Fetch Doctor Profile](#3-Fetch-Doctors-Profile-Get-Request)
+
 
 ### 1. Admin Login: POST Request
 
@@ -67,7 +76,7 @@ Response
 }
 ```
 
-### 2. Add Department: POST Request
+### 2. Add Departments: POST Request
 
 End Point
 ```
@@ -94,7 +103,7 @@ Response
     }
 }
 ```
-### 3. Fetch All Department: GET Request
+### 3. Fetch All Departments: GET Request
 
 End Point
 ```
@@ -124,7 +133,7 @@ Response
     ]
 }
 ```
-### 3. Fetch Department By Id: GET Request
+### 3. Fetch Departments By Id: GET Request
 
 End Point
 ```
@@ -145,7 +154,24 @@ Response
     }
 }
 ```
-### 1. Add Doctor: POST Request
+### 4. Update Departments By Id: Put Request
+
+End Point
+```
+/api/departments/:id/update
+```
+Response
+```json
+
+{
+    "status": 200,
+    "message": "Department with successfully updated!",
+    "data": {
+        "name": "medecine"
+    }
+}
+```
+### 1. Add Doctors: POST Request
 
 End Point
 ```
@@ -180,6 +206,60 @@ Response
             "updatedAt": "2023-06-05T09:16:59.431Z",
             "createdAt": "2023-06-05T09:16:59.431Z"
         }
+    }
+}
+```
+### 2. Doctors Login: POST Request
+
+End Point
+```
+/api/doctors/login
+```
+
+Body
+```json
+{
+    "email": "mvualain@gmail.com",
+    "password": "t1uqpk"
+    
+}
+```
+
+Response
+```json
+{
+    "status": 200,
+    "message": "Login successful",
+    "data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im12dWFsYWluQGdtYWlsLmNvbSIsInJvbGUiOiJEb2N0b3IiLCJpYXQiOjE2ODY5MjExNDR9.HbhIwIvad-5-nzMs07U44GWI-xUk3MFo8_bcBSUXv_c",
+        "email": "mvualain@gmail.com",
+        "role": "Doctor",
+        "logginTime": "6/16/2023, 3:12:25 PM"
+    }
+}
+```
+### 3. Fetch Doctors Profile: Get Request
+
+End Point
+```
+/api/doctors/my-profile
+```
+
+Authorization
+```json
+{
+    "Bearer token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im12dWFsYWluQGdtYWlsLnMvbSIsInJvbGUiOiJEb2N0b3IiLCJpYXQiOjE2ODY4NDI2MzF9.tT4dllkgU2LZsWs93H3I-Z1fYhjpZpbN_Q1UhLVAKCs" 
+}
+```
+
+Response
+```json
+{
+    "status": 200,
+    "message": "Doctor profile retrieved successfully",
+    "data": {
+        "email": "mvualain@gmail.com",
+        "role": "Doctor"
     }
 }
 ```

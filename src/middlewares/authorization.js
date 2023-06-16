@@ -29,7 +29,7 @@ export const isAdmin = async (req, res, next) => {
   }
 };
 
-export const auth = async (req, res, next) => {
+export const isDoctor = async (req, res, next) => {
   try {
     if (!req.headers.authorization) {
       return out(res, 401, 'Invalid access token', null, 'AUTHENTICATION_ERROR');

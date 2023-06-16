@@ -80,11 +80,11 @@ class DoctorController {
 
   static async getDoctorProfile(req, res) {
     try {
-      const decodedToken = req.user;
+      const { email, role } = req.user;
 
       const doctorProfile = {
-        email: decodedToken.email,
-        role: decodedToken.role
+        email,
+        role
       };
 
       return out(res, 200, 'Doctor profile retrieved successfully', doctorProfile);
