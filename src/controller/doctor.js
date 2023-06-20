@@ -80,12 +80,9 @@ class DoctorController {
 
   static async getDoctorProfile(req, res) {
     try {
-      const { email, role } = req.user;
+      const { email } = req.user;
 
-      const doctorProfile = {
-        email,
-        role
-      };
+      const doctorProfile = await DoctorService.findDoctorProfile({ where: { email } });
 
       return out(res, 200, 'Doctor profile retrieved successfully', doctorProfile);
     } catch (error) {

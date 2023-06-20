@@ -17,6 +17,16 @@ class DoctorService {
     }
   }
 
+  static async findDoctorProfile() {
+    try {
+      return await data.Doctor.findOne({
+        attributes: { exclude: ['password'] }
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async findDoctors() {
     try {
       return await data.Doctor.findAll({
