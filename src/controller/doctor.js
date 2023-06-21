@@ -88,6 +88,18 @@ class DoctorController {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
   }
+
+  static async getDoctorProfile(req, res) {
+    try {
+      const { email } = req.user;
+
+      const doctorProfile = await DoctorService.findDoctorProfile({ where: { email } });
+
+      return out(res, 200, 'Doctor profile retrieved successfully', doctorProfile);
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
+    }
+  }
 }
 
 export default DoctorController;

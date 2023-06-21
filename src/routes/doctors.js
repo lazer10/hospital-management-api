@@ -8,4 +8,5 @@ const router = Router();
 router.post('/new', Authorization.isAdmin, Validations.addDoctor, DoctorController.addDoctor);
 router.post('/login', DoctorController.doctorLogin);
 
+router.get('/my-profile', Authorization.isDoctor, DoctorController.getDoctorProfile);
 export default router;
