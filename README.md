@@ -160,6 +160,14 @@ End Point
 ```
 /api/departments/:id/update
 ```
+
+Body
+```json
+{
+    "name":"medecine"
+}
+```
+
 Response
 ```json
 
@@ -243,13 +251,6 @@ Response
 End Point
 ```
 /api/doctors/my-profile
-```
-
-Authorization
-```json
-{
-    "Bearer token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im12dWFsYWluQGdtYWlsLnMvbSIsInJvbGUiOiJEb2N0b3IiLCJpYXQiOjE2ODY4NDI2MzF9.tT4dllkgU2LZsWs93H3I-Z1fYhjpZpbN_Q1UhLVAKCs" 
-}
 ```
 
 Response
