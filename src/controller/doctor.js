@@ -100,6 +100,45 @@ class DoctorController {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
   }
+  /*
+  static async changeDefaultDoctorsPassword(req, res) {
+    try {
+      const { password: changedPassword } = req.body;
+      const { email } = req.user;
+
+      const hashedPassword = await generate(changedPassword);
+      const updatedPassword = await DoctorService.changeDoctorPassword(email, hashedPassword);
+
+      if (!updatedPassword) {
+        return out(res, 404, "Whoops! We can't find doctor with this email!", null, 'NOT_FOUND');
+      }
+      return out(res, 200, 'Password successfully changed!', updatedPassword);
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SEVER_ERROR');
+    }
+  } */
+
+  static async doctorChangeDefaultPassword(req, res) {
+    try {
+      const { oldPassword, newPassword } = req.body;
+      const { email } = req.user;
+
+      const doctorExist = await DoctorService.findDoctor({ where: { email } });
+
+      const isMatch = check(doctorExist.password, oldPassword);
+      if (!isMatch) return out(res, 400, 'Incorrect previous password', null, 'AUTHENTICATION ERROR');
+
+      const newMatchesOld = check(doctorExist.password, newPassword);
+      if (newMatchesOld) return out(res, 400, 'Previous password must not match new password', null, 'AUTHENTICATION ERROR');
+
+      const hashedPassword = await generate(newPassword);
+      const post = await DoctorService.changeDoctorPassword(hashedPassword, doctorExist.email);
+      console.log(post);
+      return out(res, 200, 'Password changed successfully');
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SEVER_ERROR');
+    }
+  }
 }
 
 export default DoctorController;

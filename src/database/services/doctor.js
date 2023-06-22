@@ -36,5 +36,21 @@ class DoctorService {
       throw error;
     }
   }
+
+  static async changeDoctorPassword(hashedPassword, email) {
+    try {
+      const doctor = await data.Doctor.findOne({ where: { email } });
+
+      if (!doctor) {
+        throw new Error('Doctor not found');
+      }
+      doctor.password = hashedPassword;
+      await doctor.save();
+
+      return null;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export default DoctorService;

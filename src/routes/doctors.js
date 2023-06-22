@@ -9,4 +9,6 @@ router.post('/new', Authorization.isAdmin, Validations.addDoctor, DoctorControll
 router.post('/login', DoctorController.doctorLogin);
 
 router.get('/my-profile', Authorization.isDoctor, DoctorController.getDoctorProfile);
+
+router.put('/change-password', Authorization.isDoctor, DoctorController.doctorChangeDefaultPassword);
 export default router;
