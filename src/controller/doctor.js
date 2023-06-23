@@ -107,12 +107,13 @@ class DoctorController {
       const { email } = req.user;
 
       const doctorExist = await DoctorService.findDoctor({ where: { email } });
+      if (!doctorExist) return out(res, 400, 'Doctor does not exist', null, 'BAD_REQUEST');
 
       const isMatch = check(doctorExist.password, oldPassword);
-      if (!isMatch) return out(res, 400, 'Incorrect previous password', null, 'AUTHENTICATION ERROR');
+      if (!isMatch) return out(res, 401, 'Incorrect previous password', null, 'AUTHENTICATION ERROR');
 
       const newMatchesOld = check(doctorExist.password, newPassword);
-      if (newMatchesOld) return out(res, 400, 'Previous password must not match new password', null, 'AUTHENTICATION ERROR');
+      if (newMatchesOld) return out(res, 401, 'Previous password must not match new password', null, 'AUTHENTICATION ERROR');
 
       const hashedPassword = await generate(newPassword);
       await DoctorService.changeDoctorPassword(hashedPassword, doctorExist.email);
