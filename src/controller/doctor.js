@@ -100,6 +100,29 @@ class DoctorController {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
   }
+
+  static async doctorChangeDefaultPassword(req, res) {
+    try {
+      const { oldPassword, newPassword } = req.body;
+      const { email } = req.user;
+
+      const doctorExist = await DoctorService.findDoctor({ where: { email } });
+      if (!doctorExist) return out(res, 400, 'Doctor does not exist', null, 'BAD_REQUEST');
+
+      const isMatch = check(doctorExist.password, oldPassword);
+      if (!isMatch) return out(res, 401, 'Incorrect previous password', null, 'AUTHENTICATION ERROR');
+
+      const newMatchesOld = check(doctorExist.password, newPassword);
+      if (newMatchesOld) return out(res, 401, 'Previous password must not match new password', null, 'AUTHENTICATION ERROR');
+
+      const hashedPassword = await generate(newPassword);
+      await DoctorService.changeDoctorPassword(hashedPassword, doctorExist.email);
+
+      return out(res, 200, 'Password changed successfully');
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SEVER_ERROR');
+    }
+  }
 }
 
 export default DoctorController;
