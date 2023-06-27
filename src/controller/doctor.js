@@ -107,7 +107,7 @@ class DoctorController {
       const { email } = req.user;
 
       const doctorExist = await DoctorService.findDoctor({ where: { email } });
-      if (!doctorExist) return out(res, 400, 'Doctor does not exist', null, 'BAD_REQUEST');
+      if (!doctorExist) return out(res, 400, 'This Doctor no longer exist', null, 'BAD_REQUEST');
 
       const isMatch = check(doctorExist.password, oldPassword);
       if (!isMatch) return out(res, 401, 'Incorrect previous password', null, 'AUTHENTICATION ERROR');
@@ -121,6 +121,34 @@ class DoctorController {
       return out(res, 200, 'Password changed successfully');
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SEVER_ERROR');
+    }
+  }
+
+  static async doctorEditProfile(req, res) {
+    try {
+      const { firstName, lastName, departments } = req.body;
+      const { email } = req.user;
+
+      const doctor = await DoctorService.findDoctor({ where: { email } });
+      if (!doctor) {
+        return out(res, 400, 'This doctor does not exist', null, 'BAD_REQUEST');
+      }
+
+      const theDepartments = await DepartmentService.fetchDepartmentsByIds(departments);
+      if (theDepartments.length !== departments.length) {
+        return out(res, 400, 'One or more departments do not exist!', null, 'BAD_REQUEST');
+      }
+
+      doctor.firstName = firstName;
+      doctor.lastName = lastName;
+      doctor.departments = departments;
+
+      const updatedDoctor = await DoctorService.updateDoctor(email, doctor);
+      const { password: _, ...doctorWithoutPassword } = updatedDoctor.dataValues;
+
+      return out(res, 200, 'Profile updated successfully', doctorWithoutPassword, null);
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
   }
 }

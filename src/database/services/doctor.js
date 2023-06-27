@@ -52,5 +52,23 @@ class DoctorService {
       throw error;
     }
   }
+
+  static async updateDoctor(email, doctor) {
+    try {
+      const doctorToUpdate = await data.Doctor.findOne({ where: { email } });
+      if (!doctorToUpdate) {
+        throw new Error('Doctor not found');
+      }
+
+      doctorToUpdate.firsName = doctor;
+      doctorToUpdate.lastName = doctor;
+      doctorToUpdate.departments = doctor;
+      await doctor.save();
+
+      return doctor;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export default DoctorService;
