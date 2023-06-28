@@ -45,15 +45,9 @@ class departmentservice {
 
   static async updateDepartment(id, updateDepartment) {
     try {
-      const departmentToUpdate = await data.Department.findOne({
-        where: { id }
-      });
-      if (departmentToUpdate) {
-        await data.Department.update(updateDepartment, { where: { id } });
+      await data.Department.update(updateDepartment, { where: { id } });
 
-        return updateDepartment;
-      }
-      return null;
+      return updateDepartment;
     } catch (error) {
       throw error;
     }

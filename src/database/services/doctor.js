@@ -37,35 +37,20 @@ class DoctorService {
     }
   }
 
-  static async changeDoctorPassword(hashedPassword, email) {
+  static async changeDoctorPassword(email, hashedPassword) {
     try {
-      const doctor = await data.Doctor.findOne({ where: { email } });
-
-      if (!doctor) {
-        throw new Error('Doctor not found');
-      }
-      doctor.password = hashedPassword;
-      await doctor.save();
-
+      await data.Doctor.update({ password: hashedPassword }, { where: { email } });
       return null;
     } catch (error) {
       throw error;
     }
   }
 
-  static async updateDoctor(email, doctor) {
+  static async updateDoctor(email, doctorToUpdate) {
     try {
-      const doctorToUpdate = await data.Doctor.findOne({ where: { email } });
-      if (!doctorToUpdate) {
-        throw new Error('Doctor not found');
-      }
+      await data.Doctor.update(doctorToUpdate, { where: { email } });
 
-      doctorToUpdate.firsName = doctor;
-      doctorToUpdate.lastName = doctor;
-      doctorToUpdate.departments = doctor;
-      await doctor.save();
-
-      return doctor;
+      return doctorToUpdate;
     } catch (error) {
       throw error;
     }
