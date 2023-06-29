@@ -48,6 +48,7 @@ class DoctorService {
 
   static async updateDoctor(email, doctorToUpdate) {
     try {
+      console.log(doctorToUpdate);
       await data.Doctor.update(doctorToUpdate, { where: { email } });
 
       return doctorToUpdate;

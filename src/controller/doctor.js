@@ -6,7 +6,6 @@ import { generateRandomNumber } from '../helpers/randomNumber';
 import { sign } from '../helpers/jwt';
 import mailer from '../helpers/mailer';
 import config from '../config';
-import data from '../database/models';
 
 class DoctorController {
   static async addDoctor(req, res) {
@@ -78,13 +77,13 @@ class DoctorController {
         email: doctorExist.email,
         role: 'Doctor'
       });
-      const Data = {
+      const data = {
         token,
         email,
         role: 'Doctor',
         logginTime: `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`
       };
-      return out(res, 200, 'Login successful', Data);
+      return out(res, 200, 'Login successful', data);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
@@ -107,8 +106,8 @@ class DoctorController {
       const { oldPassword, newPassword } = req.body;
       const { email } = req.user;
 
-      const doctorExist = await data.Doctor.findOne({ where: { email } });
-      if (!doctorExist) return out(res, 404, 'Doctor no longer exist', null, 'BAD_REQUEST');
+      const doctorExist = await DoctorService.findDoctor({ where: { email } });
+      if (!doctorExist) return out(res, 404, 'Account not found', null, 'BAD_REQUEST');
 
       const isMatch = check(doctorExist.password, oldPassword);
       if (!isMatch) return out(res, 401, 'Incorrect previous password', null, 'AUTHENTICATION ERROR');
@@ -117,7 +116,8 @@ class DoctorController {
       if (newMatchesOld) return out(res, 401, 'Previous password must not match new password', null, 'AUTHENTICATION ERROR');
 
       const hashedPassword = await generate(newPassword);
-      await DoctorService.changeDoctorPassword(email, hashedPassword);
+      const doctorToUpdate = { password: hashedPassword };
+      await DoctorService.updateDoctor(email, doctorToUpdate);
 
       return out(res, 200, 'Password changed successfully');
     } catch (error) {
@@ -129,7 +129,7 @@ class DoctorController {
     try {
       const { email } = req.user;
 
-      const doctorToUpdateExist = await data.Doctor.findOne({ where: { email } });
+      const doctorToUpdateExist = await DoctorService.findDoctor({ where: { email } });
       if (!doctorToUpdateExist) {
         return out(res, 404, 'This doctor does not exist', null, 'BAD_REQUEST');
       }
