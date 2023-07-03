@@ -37,18 +37,8 @@ class DoctorService {
     }
   }
 
-  static async changeDoctorPassword(email, hashedPassword) {
-    try {
-      await data.Doctor.update({ password: hashedPassword }, { where: { email } });
-      return null;
-    } catch (error) {
-      throw error;
-    }
-  }
-
   static async updateDoctor(email, doctorToUpdate) {
     try {
-      console.log(doctorToUpdate);
       await data.Doctor.update(doctorToUpdate, { where: { email } });
 
       return doctorToUpdate;
