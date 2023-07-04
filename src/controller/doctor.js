@@ -3,7 +3,7 @@ import DepartmentService from '../database/services/department';
 import DoctorService from '../database/services/doctor';
 import out from '../helpers/response';
 import { generateRandomNumber } from '../helpers/randomNumber';
-import { sign } from '../helpers/jwt';
+import { sign, verify } from '../helpers/jwt';
 import mailer from '../helpers/mailer';
 import config from '../config';
 
@@ -139,6 +139,49 @@ class DoctorController {
       const { password: _, ...doctorWithoutPassword } = doctorToUpdateExist.dataValues;
 
       return out(res, 200, 'Profile updated successfully', doctorWithoutPassword);
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
+    }
+  }
+
+  static async forgotDoctorPassword(req, res) {
+    try {
+      const { email } = req.body;
+
+      const doctorExist = await DoctorService.findDoctor({ where: { email } });
+      if (!doctorExist) return out(res, 404, 'This email is not registered!', null, 'BAD_REQUEST');
+
+      const resetToken = sign({
+        id: doctorExist.id,
+        email: doctorExist.email,
+        functionality: 'toResetPassword'
+      }, { expiresIn: 600 });
+
+      return out(res, 200, 'Reset token generated successful', resetToken);
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
+    }
+  }
+
+  static async resetDoctorPassword(req, res) {
+    try {
+      const { newPassword, confirmPassword } = req.body;
+      const { resetToken } = req.params;
+
+      if (newPassword !== confirmPassword) {
+        return out(res, 400, 'Please provide the same password!', null, 'BAD_REQUEST');
+      }
+      // const token = resetToken.split(' ')[1];
+      const validResetToken = verify(resetToken);
+
+      if (!validResetToken || validResetToken.functionality !== 'toResetPassword') {
+        return out(res, 403, 'You don\'t have access to do that action', null, 'FORBIDDEN');
+      }
+
+      const hashedPassword = await generate(newPassword);
+      await DoctorService.updatePassword(hashedPassword, validResetToken.id);
+
+      return out(res, 200, 'Password reseted successfully');
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }

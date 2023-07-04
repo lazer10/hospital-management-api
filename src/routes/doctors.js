@@ -7,6 +7,8 @@ const router = Router();
 
 router.post('/new', Authorization.isAdmin, Validations.addDoctor, DoctorController.addDoctor);
 router.post('/login', DoctorController.doctorLogin);
+router.post('/forgot-password', Validations.doctorForgotPassword, DoctorController.forgotDoctorPassword);
+router.put('/reset-password/:resetToken', Validations.doctorResetpassword, DoctorController.resetDoctorPassword);
 
 router.get('/my-profile', Authorization.isDoctor, DoctorController.getDoctorProfile);
 

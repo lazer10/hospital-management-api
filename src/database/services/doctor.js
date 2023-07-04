@@ -46,5 +46,13 @@ class DoctorService {
       throw error;
     }
   }
+
+  static async updatePassword(password, doctorId) {
+    try {
+      return await data.Doctor.update({ password }, { where: { id: doctorId } });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export default DoctorService;
