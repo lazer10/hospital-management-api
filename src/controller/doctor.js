@@ -3,7 +3,7 @@ import DepartmentService from '../database/services/department';
 import DoctorService from '../database/services/doctor';
 import out from '../helpers/response';
 import { generateRandomNumber } from '../helpers/randomNumber';
-import { sign } from '../helpers/jwt';
+import { sign, verify } from '../helpers/jwt';
 import mailer from '../helpers/mailer';
 import config from '../config';
 
@@ -116,11 +116,67 @@ class DoctorController {
       if (newMatchesOld) return out(res, 401, 'Previous password must not match new password', null, 'AUTHENTICATION ERROR');
 
       const hashedPassword = await generate(newPassword);
-      await DoctorService.changeDoctorPassword(hashedPassword, doctorExist.email);
+      const doctorToUpdate = { password: hashedPassword };
+      console.log(doctorToUpdate);
+      await DoctorService.updateDoctor(doctorToUpdate, doctorExist.email);
 
       return out(res, 200, 'Password changed successfully');
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SEVER_ERROR');
+    }
+  }
+
+  static async forgotDoctorPassword(req, res) {
+    try {
+      const { email } = req.body;
+
+      const doctorExist = await DoctorService.findDoctor({ where: { email } });
+      if (!doctorExist) return out(res, 404, 'This email is not registered!', null, 'BAD_REQUEST');
+
+      const resetToken = sign({
+        id: doctorExist.id,
+        email: doctorExist.email,
+        functionality: 'toResetPassword'
+      }, { expiresIn: 600 });
+
+      const URL = `${config.FRONTEND_URL}api/doctors/forgot-password/${resetToken}`;
+      const emailSent = await mailer(
+        'Reset-Token',
+        {
+          email: doctorExist.email,
+          URL,
+        },
+        config.SENDGRID_EMAIL_RECEIVER
+      );
+      if (!emailSent) throw Error('Error sending the email');
+
+      return out(res, 200, 'Reset token generated successful', resetToken);
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
+    }
+  }
+
+  static async resetDoctorPassword(req, res) {
+    try {
+      const { newPassword, confirmPassword } = req.body;
+      const { resetToken } = req.params;
+
+      const validResetToken = verify(resetToken);
+      if (!validResetToken || validResetToken.functionality !== 'toResetPassword') {
+        return out(res, 403, 'You don\'t have access to do that action', null, 'FORBIDDEN');
+      }
+
+      if (newPassword !== confirmPassword) {
+        return out(res, 400, 'Please provide the same password!', null, 'BAD_REQUEST');
+      }
+
+      const hashedPassword = await generate(newPassword);
+      const passwordToReset = { password: hashedPassword };
+      await DoctorService.updateDoctor(passwordToReset, validResetToken.email);
+
+      return out(res, 200, 'Password reseted successfully');
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
   }
 }

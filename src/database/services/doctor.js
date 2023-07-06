@@ -52,5 +52,14 @@ class DoctorService {
       throw error;
     }
   }
+
+  static async updateDoctor(doctorToUpdate, email) {
+    try {
+      await data.Doctor.update(doctorToUpdate, { where: { email } });
+      return doctorToUpdate;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export default DoctorService;

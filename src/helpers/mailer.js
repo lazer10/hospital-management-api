@@ -22,6 +22,10 @@ const mailer = async (usage, emailData, receiverEmail) => {
         template = '../public/templates/doctorRegistration.ejs';
         subject = 'Doctor Registration';
         break;
+      case 'Reset-Token':
+        template = '../public/templates/doctorResetPassword.ejs';
+        subject = 'Doctor Reset password';
+        break;
       default:
         template = '';
     }
