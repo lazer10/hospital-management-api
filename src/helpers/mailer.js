@@ -22,9 +22,14 @@ const mailer = async (usage, emailData, receiverEmail) => {
         template = '../public/templates/doctorRegistration.ejs';
         subject = 'Doctor Registration';
         break;
+      case 'reset-password':
+        template = '../public/templates/doctorResetPassword.ejs';
+        subject = 'Doctor Registration';
+        break;
       default:
         template = '';
     }
+
     const data = await ejs.renderFile(path.join(__dirname, template), emailData);
 
     const emailOptions = {
