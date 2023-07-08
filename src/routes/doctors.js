@@ -13,4 +13,5 @@ router.get('/my-profile', Authorization.isDoctor, DoctorController.getDoctorProf
 
 router.put('/reset-password/:resetToken', Validations.doctorResetpassword, DoctorController.resetDoctorPassword);
 router.put('/change-password', Authorization.isDoctor, Validations.updateDefaultPassword, DoctorController.doctorChangeDefaultPassword);
+router.put('/edit-profile', Authorization.isDoctor, Validations.doctorEditTheirProfile, DoctorController.doctorEditProfile);
 export default router;
