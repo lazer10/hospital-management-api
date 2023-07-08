@@ -118,7 +118,6 @@ class DoctorController {
       const hashedPassword = await generate(newPassword);
       const doctorToUpdate = { password: hashedPassword };
       await DoctorService.updateDoctor(doctorToUpdate, doctorExist.email);
-      await DoctorService.updateDoctor(email, doctorToUpdate);
 
       return out(res, 200, 'Password changed successfully');
     } catch (error) {
