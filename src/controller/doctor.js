@@ -117,7 +117,6 @@ class DoctorController {
 
       const hashedPassword = await generate(newPassword);
       const doctorToUpdate = { password: hashedPassword };
-      console.log(doctorToUpdate);
       await DoctorService.updateDoctor(doctorToUpdate, doctorExist.email);
 
       return out(res, 200, 'Password changed successfully');
@@ -137,9 +136,9 @@ class DoctorController {
         id: doctorExist.id,
         email: doctorExist.email,
         functionality: 'toResetPassword'
-      }, { expiresIn: 600 });
+      });
 
-      const URL = `${config.FRONTEND_URL}api/doctors/forgot-password/${resetToken}`;
+      const URL = `${config.FRONTEND_URL}/api/doctors/forgot-password/${resetToken}`;
       const emailSent = await mailer(
         'Reset-Token',
         {
@@ -158,7 +157,6 @@ class DoctorController {
 
   static async resetDoctorPassword(req, res) {
     try {
-      const { newPassword, confirmPassword } = req.body;
       const { resetToken } = req.params;
 
       const validResetToken = verify(resetToken);
@@ -166,11 +164,7 @@ class DoctorController {
         return out(res, 403, 'You don\'t have access to do that action', null, 'FORBIDDEN');
       }
 
-      if (newPassword !== confirmPassword) {
-        return out(res, 400, 'Please provide the same password!', null, 'BAD_REQUEST');
-      }
-
-      const hashedPassword = await generate(newPassword);
+      const hashedPassword = await generate(req.body.newPassword);
       const passwordToReset = { password: hashedPassword };
       await DoctorService.updateDoctor(passwordToReset, validResetToken.email);
 

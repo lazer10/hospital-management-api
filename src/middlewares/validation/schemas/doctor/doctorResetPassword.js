@@ -9,6 +9,7 @@ export default Joi.object().keys({
   confirmPassword: Joi.string()
     .min(8)
     .required()
+    .valid(Joi.ref('newPassword'))
     .regex(/^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]+$/)
     .message('Password must contain at least one lowercase letter, one digit, and one symbol')
 }).options({ allowUnknown: false });
