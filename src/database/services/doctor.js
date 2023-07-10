@@ -37,10 +37,9 @@ class DoctorService {
     }
   }
 
-  static async updateDoctor(email, doctorToUpdate) {
+  static async updateDoctor(doctorToUpdate, email) {
     try {
       await data.Doctor.update(doctorToUpdate, { where: { email } });
-
       return doctorToUpdate;
     } catch (error) {
       throw error;
