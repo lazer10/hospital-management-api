@@ -45,5 +45,13 @@ class DoctorService {
       throw error;
     }
   }
+
+  static async fetchDoctors() {
+    try {
+      return await data.Doctor.findAll();
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export default DoctorService;

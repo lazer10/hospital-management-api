@@ -192,6 +192,22 @@ class DoctorController {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
   }
+
+  static async fetchAllDoctors(req, res) {
+    try {
+      const allDoctors = await DoctorService.fetchDoctors();
+      if (allDoctors.length === 0) return out(res, 404, 'Doctor not found', null, 'NOT_FOUND');
+
+      const doctorsWithoutPassword = allDoctors.map((doctor) => {
+        const { password, ...doctorWithoutPassword } = doctor.dataValues;
+        return doctorWithoutPassword;
+      });
+
+      return out(res, 200, 'Doctors retrieved successfully', doctorsWithoutPassword, null);
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
+    }
+  }
 }
 
 export default DoctorController;
