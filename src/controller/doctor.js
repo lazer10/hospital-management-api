@@ -192,6 +192,21 @@ class DoctorController {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
   }
+
+  static async searchDoctors(req, res) {
+    try {
+      const { search } = req.query;
+      const doctors = await DoctorService.searchDoctors(search);
+
+      if (doctors.length < 0 || doctors.length === 0) {
+        return out(res, 404, 'Doctors not found', null, 'NOT_FOUND');
+      }
+
+      return out(res, 200, 'Doctor retrieved successfully', doctors);
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
+    }
+  }
 }
 
 export default DoctorController;

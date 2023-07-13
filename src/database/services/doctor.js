@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import data from '../models';
 
 class DoctorService {
@@ -41,6 +42,24 @@ class DoctorService {
     try {
       await data.Doctor.update(doctorToUpdate, { where: { email } });
       return doctorToUpdate;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async searchDoctors(searchTerm) {
+    try {
+      const doctors = await data.Doctor.findAll({
+        where: {
+          [Op.or]: [
+            { firstName: { [Op.iLike]: `%${searchTerm}%` } },
+            { lastName: { [Op.iLike]: `%${searchTerm}%` } }
+          ]
+        },
+        attributes: ['firstName', 'lastName', 'email', 'departments']
+      });
+
+      return doctors;
     } catch (error) {
       throw error;
     }
