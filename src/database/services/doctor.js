@@ -48,7 +48,9 @@ class DoctorService {
 
   static async fetchDoctors() {
     try {
-      return await data.Doctor.findAll();
+      return await data.Doctor.findAll({
+        attributes: { exclude: ['password'] }
+      });
     } catch (error) {
       throw error;
     }
