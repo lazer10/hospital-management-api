@@ -198,11 +198,11 @@ class DoctorController {
       const { search } = req.query;
       const doctors = await DoctorService.searchDoctors(search);
 
-      if (doctors.length < 0 || doctors.length === 0) {
+      if (doctors.length === 0) {
         return out(res, 404, 'Doctors not found', null, 'NOT_FOUND');
       }
 
-      return out(res, 200, 'Doctor retrieved successfully', doctors);
+      return out(res, 200, 'Doctor(s) retrieved successfully', doctors);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
