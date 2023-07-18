@@ -10,7 +10,7 @@ router.post('/login', DoctorController.doctorLogin);
 router.post('/forgot-password', Validations.doctorForgotPassword, DoctorController.forgotDoctorPassword);
 
 router.get('/my-profile', Authorization.isDoctor, DoctorController.getDoctorProfile);
-router.get('/fetch-all', DoctorController.fetchAllDoctors);
+router.get('/', DoctorController.fetchAllDoctors);
 
 router.put('/reset-password/:resetToken', Validations.doctorResetpassword, DoctorController.resetDoctorPassword);
 router.put('/change-password', Authorization.isDoctor, Validations.updateDefaultPassword, DoctorController.doctorChangeDefaultPassword);
