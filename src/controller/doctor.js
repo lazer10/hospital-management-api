@@ -196,6 +196,9 @@ class DoctorController {
   static async searchDoctors(req, res) {
     try {
       const { search } = req.query;
+      if (!search || search.trim().length === 0) {
+        return out(res, 400, 'Invalid search query', null, 'BAD_REQUEST');
+      }
       const doctors = await DoctorService.searchDoctors(search);
 
       if (doctors.length === 0) {
