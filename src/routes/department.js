@@ -7,7 +7,7 @@ const router = Router();
 
 router.post('/new', Authorization.isAdmin, Validations.addDepartment, DepartmentController.addDepartment);
 
-router.get('/', DepartmentController.fetchAllDepartments);
+router.get('/all', DepartmentController.fetchAllDepartments);
 router.get('/:id', DepartmentController.fetchDepartmentById);
 router.get('/', DepartmentController.searchDepartments);
 

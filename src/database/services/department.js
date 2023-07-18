@@ -62,7 +62,7 @@ class departmentservice {
             { name: { [Op.iLike]: `%${searchTerm}%` } }
           ]
         },
-        attributes: ['id', 'name']
+        attributes: ['id', 'name', 'createdAt', 'updatedAt']
       });
       return departments;
     } catch (error) {
