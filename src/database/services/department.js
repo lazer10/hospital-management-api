@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import data from '../models';
 
 class departmentservice {
@@ -48,6 +49,22 @@ class departmentservice {
       await data.Department.update(updateDepartment, { where: { id } });
 
       return updateDepartment;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async searchDepartments(searchTerm) {
+    try {
+      const departments = await data.Department.findAll({
+        where: {
+          [Op.or]: [
+            { name: { [Op.iLike]: `%${searchTerm}%` } }
+          ]
+        },
+        attributes: ['id', 'name']
+      });
+      return departments;
     } catch (error) {
       throw error;
     }
