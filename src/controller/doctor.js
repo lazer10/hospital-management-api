@@ -193,12 +193,19 @@ class DoctorController {
     }
   }
 
-  static async fetchAllDoctors(req, res) {
+  static async searchDoctors(req, res) {
     try {
-      const allDoctors = await DoctorService.fetchDoctors();
-      if (allDoctors.length === 0) return out(res, 404, 'Doctor not found', null, 'NOT_FOUND');
+      const { search } = req.query;
+      if (!search || search.trim().length === 0) {
+        return out(res, 400, 'Invalid search query', null, 'BAD_REQUEST');
+      }
+      const doctors = await DoctorService.searchDoctors(search);
 
-      return out(res, 200, 'Doctors retrieved successfully', allDoctors);
+      if (doctors.length === 0) {
+        return out(res, 404, 'Doctors not found', null, 'NOT_FOUND');
+      }
+
+      return out(res, 200, 'Doctor(s) retrieved successfully', doctors);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }

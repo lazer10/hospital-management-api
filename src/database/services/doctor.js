@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import data from '../models';
 
 class DoctorService {
@@ -46,11 +47,19 @@ class DoctorService {
     }
   }
 
-  static async fetchDoctors() {
+  static async searchDoctors(searchTerm) {
     try {
-      return await data.Doctor.findAll({
-        attributes: { exclude: ['password'] }
+      const doctors = await data.Doctor.findAll({
+        where: {
+          [Op.or]: [
+            { firstName: { [Op.iLike]: `%${searchTerm}%` } },
+            { lastName: { [Op.iLike]: `%${searchTerm}%` } }
+          ]
+        },
+        attributes: ['firstName', 'lastName', 'email', 'departments']
       });
+
+      return doctors;
     } catch (error) {
       throw error;
     }
