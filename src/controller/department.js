@@ -63,6 +63,25 @@ class DepartmentController {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
   }
+
+  static async searchDepartments(req, res) {
+    try {
+      const { search } = req.query;
+      if (!search || search.trim().length === 0) {
+        return out(res, 400, 'Invalid search query', null, 'BAD_REQUEST');
+      }
+
+      const departments = await DepartmentService.searchDepartments(search);
+
+      if (departments.length === 0) {
+        return out(res, 404, 'Departments not found', null, 'NOT_FOUND');
+      }
+
+      return out(res, 200, 'Department(s) retrieved successfully', departments);
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
+    }
+  }
 }
 
 export default DepartmentController;

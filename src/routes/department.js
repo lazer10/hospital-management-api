@@ -8,6 +8,7 @@ const router = Router();
 router.post('/new', Authorization.isAdmin, Validations.addDepartment, DepartmentController.addDepartment);
 
 router.get('/', DepartmentController.fetchAllDepartments);
+router.get('/search', DepartmentController.searchDepartments);
 router.get('/:id', DepartmentController.fetchDepartmentById);
 
 router.put('/:id/update', Authorization.isAdmin, Validations.updateDepartment, DepartmentController.updateDepartmentById);
