@@ -45,5 +45,15 @@ class DoctorService {
       throw error;
     }
   }
+
+  static async fetchDoctors() {
+    try {
+      return await data.Doctor.findAll({
+        attributes: { exclude: ['password'] }
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export default DoctorService;
