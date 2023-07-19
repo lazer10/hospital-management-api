@@ -429,7 +429,7 @@ Response
 End Point
 
 ```
-/api/departments/?search=kkkk
+/api/departments/search/?search=kkkk
 ```
 
 Response
