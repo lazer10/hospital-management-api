@@ -2,6 +2,7 @@ import { Router } from 'express';
 import admin from './Admin';
 import department from './department';
 import doctor from './doctors';
+import user from './users';
 
 const router = Router();
 
