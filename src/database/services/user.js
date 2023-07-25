@@ -1,19 +1,13 @@
-import { Op } from 'sequelize';
 import data from '../models';
 
 class UserService {
-  static async findDoctor(newDoctor) {
+  static async updateUser(userToUpdate, email) {
     try {
-      return await data.Doctor.findOne(newDoctor);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  static async updateDoctor(doctorToUpdate, email) {
-    try {
-      await data.Doctor.update(doctorToUpdate, { where: { email } });
-      return doctorToUpdate;
+      const user = await data.User.findOne({ where: { email } });
+      if (!user) {
+        throw new Error('User not found');
+      }
+      return await user.update(userToUpdate);
     } catch (error) {
       throw error;
     }
