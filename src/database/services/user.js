@@ -4,7 +4,8 @@ import data from '../models';
 class UserService {
   static async addUser(newUser) {
     try {
-      return await data.User.create(newUser);
+      const { password, ...userWithoutPassword } = newUser;
+      return await data.User.create(userWithoutPassword);
     } catch (error) {
       throw error;
     }
@@ -15,7 +16,7 @@ class UserService {
       return await data.User.findOne({
         where: {
           [Op.or]: [{ email }, { userName }]
-        }, attributes: { exclude: ['password'] }
+        }
       });
     } catch (error) {
       throw error;
