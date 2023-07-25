@@ -12,14 +12,13 @@ class UserController {
         firstName, lastName, email, userName, password, phone_number
       } = req.body;
 
-      const emailExist = await UserService.findUser({ where: { email } });
-      if (emailExist) return out(res, 409, `The user with this Email ${email}  already exist!`, null, 'CONFLICT_ERROR');
+      const user = await UserService.findUser({ email, userName });
+      if (user) {
+        return out(res, 409, `The user with this Email or User name already exists!`, null, 'CONFLICT_ERROR');
+      }
 
-      const userNameExist = await UserService.findUser({ where: { userName } });
-      if (userNameExist) return out(res, 409, `The user with this user name ${userName}  already exist!`, null, 'CONFLICT_ERROR');
-      
       const hashedPassword = await generate(password);
-      const user = await UserService.addUser({
+      const userData = await UserService.addUser({
         firstName,
         lastName,
         email,
@@ -29,14 +28,13 @@ class UserController {
         isVerified: false
       });
 
-      const { password: _, ...userWithoutPassword } = user.dataValues;
-      const verificationLink = sign({
+      const verificationToken = sign({
         userName,
         email,
         functionality: 'signupVerificationLink'
       });
 
-      const URL = `${config.FRONTEND_URL}/api/user/signUp/${verificationLink}`;
+      const URL = `${config.FRONTEND_URL}/api/user/signUp/${verificationToken}`;
       const emailSent = await mailer(
         'Verification-Link',
         {
@@ -46,7 +44,7 @@ class UserController {
         config.SENDGRID_EMAIL_RECEIVER
       );
       if (!emailSent) throw Error('Error sending the email');
-      return out(res, 201, 'User successfully created', userWithoutPassword);
+      return out(res, 201, 'User successfully created', userData);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }

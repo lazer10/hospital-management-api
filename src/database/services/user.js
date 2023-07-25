@@ -1,21 +1,26 @@
+import { Op } from 'sequelize';
 import data from '../models';
 
 class UserService {
-  static async addUser(newDoctor) {
+  static async addUser(newUser) {
     try {
-      return await data.User.create(newDoctor);
+      return await data.User.create(newUser);
     } catch (error) {
       throw error;
     }
   }
 
-  static async findUser(newUser) {
+  static async findUser({ email, userName }) {
     try {
-      return await data.User.findOne(newUser);
+      return await data.User.findOne({
+        where: {
+          [Op.or]: [{ email }, { userName }]
+        }, attributes: { exclude: ['password'] }
+      });
     } catch (error) {
       throw error;
     }
   }
-
+  
 }
 export default UserService;
