@@ -1,4 +1,3 @@
-import { Op } from 'sequelize';
 import data from '../models';
 
 class UserService {
@@ -10,12 +9,12 @@ class UserService {
     }
   }
 
-  static async findUser({ email, userName }) {
+  static async findUser(filter) {
     try {
       return await data.User.findOne({
         where: {
-          [Op.or]: [{ email }, { userName }]
-        }
+          [data.Sequelize.Op.or]: filter,
+        },
       });
     } catch (error) {
       throw error;
