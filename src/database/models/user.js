@@ -14,13 +14,34 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.literal('gen_random_uuid()')
     },
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    userName: DataTypes.STRING,
-    password: DataTypes.STRING,
-    phone_number: DataTypes.STRING,
-    isVerified: DataTypes.BOOLEAN
+    firstName: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    lastName: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    email: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    userName: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    password: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    phone_number: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    isVerified: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN
+    }
   }, {
     sequelize,
     modelName: 'User',
