@@ -9,5 +9,5 @@ const router = Router();
 router.use('/admin', admin);
 router.use('/departments', department);
 router.use('/doctors', doctor);
-router.use('/users', user)
+router.use('/users', user);
 export default router;

@@ -6,10 +6,10 @@ export default Joi.object().keys({
   email: Joi.string().email().required(),
   userName: Joi.string().min(3).required(),
   password: Joi.string()
-  .min(8)
-  .required()
-  .regex(/^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]+$/)
-  .message('Password must contain at least one lowercase letter, one digit, and one symbol'),
+    .min(8)
+    .required()
+    .regex(/^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]+$/)
+    .message('Password must contain at least one lowercase letter, one digit, and one symbol'),
   confirmPassword: Joi.string()
     .min(8)
     .required()

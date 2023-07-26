@@ -1,4 +1,4 @@
-import { generate, check } from '../helpers/bcrypt';
+import { generate } from '../helpers/bcrypt';
 import UserService from '../database/services/user';
 import out from '../helpers/response';
 import { sign } from '../helpers/jwt';
@@ -14,7 +14,7 @@ class UserController {
 
       const user = await UserService.findUser({ email, userName });
       if (user) {
-        return out(res, 409, `The user with this Email or User name already exists!`, null, 'CONFLICT_ERROR');
+        return out(res, 409, 'The user with this Email or User name already exists!', null, 'CONFLICT_ERROR');
       }
 
       const hashedPassword = await generate(password);
