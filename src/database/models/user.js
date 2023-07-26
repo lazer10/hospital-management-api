@@ -24,6 +24,16 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
+    hooks: {
+      afterCreate: (record) => {
+        // eslint-disable-next-line no-param-reassign
+        delete record.dataValues.password;
+      },
+      afterUpdate: (record) => {
+        // eslint-disable-next-line no-param-reassign
+        delete record.dataValues.password;
+      },
+    }
   });
   return User;
 };

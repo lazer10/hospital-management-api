@@ -4,8 +4,7 @@ import data from '../models';
 class UserService {
   static async addUser(newUser) {
     try {
-      const { password, ...userWithoutPassword } = newUser;
-      return await data.User.create(userWithoutPassword);
+      return await data.User.create(newUser);
     } catch (error) {
       throw error;
     }
@@ -22,6 +21,5 @@ class UserService {
       throw error;
     }
   }
-  
 }
 export default UserService;
