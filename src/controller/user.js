@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { generate } from '../helpers/bcrypt';
 import UserService from '../database/services/user';
 import out from '../helpers/response';
@@ -12,7 +13,10 @@ class UserController {
         firstName, lastName, email, userName, password, phone_number
       } = req.body;
 
-      const user = await UserService.findUser({ email, userName });
+      const user = await UserService.findUser({
+        [Op.or]: [{ email }, { userName }]
+      });
+
       if (user) {
         return out(res, 409, 'The user with this Email or User name already exists!', null, 'CONFLICT_ERROR');
       }

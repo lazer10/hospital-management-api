@@ -12,9 +12,7 @@ class UserService {
   static async findUser(filter) {
     try {
       return await data.User.findOne({
-        where: {
-          [data.Sequelize.Op.or]: filter,
-        },
+        where: filter,
       });
     } catch (error) {
       throw error;
