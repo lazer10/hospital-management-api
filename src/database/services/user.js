@@ -19,9 +19,10 @@ class UserService {
     }
   }
 
-  static async findUsers(newUser) {
+  static async updateUser(userToUpdate, email) {
     try {
-      return await data.User.findOne(newUser);
+      await data.User.update(userToUpdate, { where: { email } });
+      return userToUpdate;
     } catch (error) {
       throw error;
     }
