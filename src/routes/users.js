@@ -6,4 +6,6 @@ const router = Router();
 
 router.post('/signup', Validations.userSignUp, UserController.userSignUp);
 
+router.put('/verify-account/:verificationToken', UserController.verifyUserAccount);
+
 export default router;
