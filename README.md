@@ -28,6 +28,7 @@ SMTP_PORT=25
 SMTP_USER=apikey
 SMTP_PASS=
 SENDGRID_EMAIL_RECEIVER=
+FRONTEND_URL=localhost:
 ```
 
 ## Routes Menu
@@ -50,6 +51,9 @@ SENDGRID_EMAIL_RECEIVER=
 - [Fetch Doctor Profile](#3-Fetch-Doctors-Profile-Get-Request)
 - [Change Doctor Default Password](#4-Change-Doctors-Password-Put-Request)
 - [Edit Doctor Profile](#5-Edit-Doctors-Profile-Put-Request)
+- [Fetch All Doctor](#6-Fetch-All-Doctors-Get-Request)
+- [Search Doctor](#7-search-doctors-Get-request)
+- [Search Department](#8-search-department-Get-request)
 
 ### 1. Admin Login: POST Request
 
@@ -360,6 +364,84 @@ Response
     "isVerified": false,
     "createdAt": "2023-06-22T09:28:53.020Z",
     "updatedAt": "2023-06-28T12:48:32.723Z"
+  }
+}
+```
+
+### 6. Fetch All Doctors: Get Request
+
+End Point
+
+```
+/api/doctors/
+```
+
+Response
+
+```json
+{
+  "status": 200,
+  "message": "Doctors retrieved successfully",
+  "data": [
+    {
+      "id": "7838d640-cf21-41ec-b5ea-a84617f88ccc",
+      "firstName": "kkkk",
+      "lastName": "aaaaa",
+      "email": "alainv@gmail.com",
+      "departments": ["5487a99b-a560-40a0-b1bb-b67c0931ed96"],
+      "isVerified": false,
+      "createdAt": "2023-07-06T10:13:41.561Z",
+      "updatedAt": "2023-07-06T10:13:41.561Z"
+    }
+  ]
+}
+```
+
+### 7. Search Doctors: Get Request
+
+End Point
+
+```
+/api/doctors/?search=kkkk
+```
+
+Response
+
+```json
+{
+  {
+    "id": "7838d640-cf21-41ec-b5ea-a84617f88ccc",
+    "firstName": "kkkk",
+    "lastName": "aaaaa",
+    "email": "alainv@gmail.com",
+    "departments": [
+      "5487a99b-a560-40a0-b1bb-b67c0931ed96"
+       ],
+    "isVerified": false,
+    "createdAt": "2023-07-06T10:13:41.561Z",
+    "updatedAt": "2023-07-06T10:13:41.561Z"
+  }
+}
+```
+
+### 8. Search Department: Get Request
+
+End Point
+
+```
+/api/departments/search/?search=kkkk
+```
+
+Response
+
+```json
+{
+  {
+    "id": "5487a99b-a560-40a0-b1bb-b67c0931ed96",
+    "name": "alainn",
+    "created_at_milli": "1687961045026",
+    "createdAt": "2023-06-28T14:04:05.235Z",
+    "updatedAt": "2023-07-06T08:12:44.319Z"
   }
 }
 ```

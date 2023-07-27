@@ -1,17 +1,31 @@
 import data from '../models';
 
 class UserService {
-  static async updateUser(userToUpdate, email) {
+  static async addUser(newUser) {
     try {
-      const user = await data.User.findOne({ where: { email } });
-      if (!user) {
-        throw new Error('User not found');
-      }
-      return await user.update(userToUpdate);
+      return await data.User.create(newUser);
     } catch (error) {
       throw error;
     }
   }
 
+  static async findUser(filter) {
+    try {
+      return await data.User.findOne({
+        where: filter,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async updateUser(userToUpdate, email) {
+    try {
+      await data.User.update(userToUpdate, { where: { email } });
+      return userToUpdate;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export default UserService;
