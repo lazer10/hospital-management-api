@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { generate } from '../helpers/bcrypt';
+import { generate, check } from '../helpers/bcrypt';
 import UserService from '../database/services/user';
 import out from '../helpers/response';
 import { sign, verify } from '../helpers/jwt';
@@ -54,6 +54,39 @@ class UserController {
     }
   }
 
+  static async userLogin(req, res) {
+    try {
+      const { email, userName, password } = req.body;
+
+      if ((!!email && !!userName) || (!email && !userName)) {
+        return out(res, 422, 'Please provide only Email or UserName ', null, 'VALIDATION_ERROR');
+      }
+
+      if (!password) {
+        return out(res, 422, 'Please provide password ', null, 'VALIDATION_ERROR');
+      }
+      const userExist = await UserService.findUser(email ? { email } : { userName });
+      let validPassword;
+      if (userExist) {
+        validPassword = await check(userExist.password, password);
+      }
+
+      if (!userExist || !validPassword) return out(res, 400, 'Invalid email/user name or password', null, 'BAD_REQUEST');
+
+      const newtoken = sign({
+        email: userExist.email,
+        role: 'User',
+        state: 'Logged in'
+      });
+      const data = {
+        newtoken,
+        email,
+        role: 'User',
+        logginTime: `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`
+      };
+      return out(res, 200, 'Login successful', data);
+    } catch (error) {
+
   static async verifyUserAccount(req, res) {
     try {
       const { verificationToken } = req.params;
@@ -71,6 +104,7 @@ class UserController {
       if (error.name === 'JsonWebTokenError') {
         return out(res, 400, 'Invalid verification token', null, 'BAD_REQUEST');
       }
+
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
   }
