@@ -2,7 +2,7 @@ import { Op } from 'sequelize';
 import { generate } from '../helpers/bcrypt';
 import UserService from '../database/services/user';
 import out from '../helpers/response';
-import { sign } from '../helpers/jwt';
+import { sign, verify } from '../helpers/jwt';
 import mailer from '../helpers/mailer';
 import config from '../config';
 
@@ -53,5 +53,27 @@ class UserController {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
   }
+
+  static async verifyUserAccount(req, res) {
+    try {
+      const { verificationToken } = req.params;
+
+      const validUserVerificationToken = verify(verificationToken);
+      if (!validUserVerificationToken || validUserVerificationToken.functionality !== 'signupVerificationLink') {
+        return out(res, 403, 'You don\'t have access to do that action', null, 'FORBIDDEN');
+      }
+
+      const accountToVerify = { isVerified: true };
+      await UserService.updateUser(accountToVerify, validUserVerificationToken.email);
+
+      return out(res, 200, 'Account is verified');
+    } catch (error) {
+      if (error.name === 'JsonWebTokenError') {
+        return out(res, 400, 'Invalid verification token', null, 'BAD_REQUEST');
+      }
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
+    }
+  }
 }
+
 export default UserController;
