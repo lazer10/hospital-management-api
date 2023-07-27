@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { generate } from '../helpers/bcrypt';
+import { generate, check } from '../helpers/bcrypt';
 import UserService from '../database/services/user';
 import out from '../helpers/response';
 import { sign } from '../helpers/jwt';
@@ -49,6 +49,42 @@ class UserController {
       );
       if (!emailSent) throw Error('Error sending the email');
       return out(res, 201, 'User successfully created', userData);
+    } catch (error) {
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
+    }
+  }
+
+  static async userLogin(req, res) {
+    try {
+      const { email, userName, password } = req.body;
+
+      if ((!!email && !!userName) || (!email && !userName)) {
+        return out(res, 422, 'Please provide only Email or UserName ', null, 'VALIDATION_ERROR');
+      }
+
+      if (!password) {
+        return out(res, 422, 'Please provide password ', null, 'VALIDATION_ERROR');
+      }
+      const userExist = await UserService.findUser(email ? { email } : { userName });
+      let validPassword;
+      if (userExist) {
+        validPassword = await check(userExist.password, password);
+      }
+
+      if (!userExist || !validPassword) return out(res, 400, 'Invalid email/user name or password', null, 'BAD_REQUEST');
+
+      const newtoken = sign({
+        email: userExist.email,
+        role: 'User',
+        state: 'Logged in'
+      });
+      const data = {
+        newtoken,
+        email,
+        role: 'User',
+        logginTime: `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`
+      };
+      return out(res, 200, 'Login successful', data);
     } catch (error) {
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }

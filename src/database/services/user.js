@@ -18,5 +18,13 @@ class UserService {
       throw error;
     }
   }
+
+  static async findUsers(newUser) {
+    try {
+      return await data.User.findOne(newUser);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export default UserService;
