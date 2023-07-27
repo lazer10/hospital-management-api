@@ -21,7 +21,7 @@ class UserService {
 
   static async updateUser(userToUpdate, email) {
     try {
-      await data.Doctor.update(userToUpdate, { where: { email } });
+      await data.User.update(userToUpdate, { where: { email } });
       return userToUpdate;
     } catch (error) {
       throw error;
