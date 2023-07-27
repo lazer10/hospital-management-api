@@ -18,5 +18,14 @@ class UserService {
       throw error;
     }
   }
+
+  static async updateDoctor(userToUpdate, email) {
+    try {
+      await data.Doctor.update(userToUpdate, { where: { email } });
+      return userToUpdate;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export default UserService;
