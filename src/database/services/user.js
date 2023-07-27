@@ -19,7 +19,7 @@ class UserService {
     }
   }
 
-  static async updateDoctor(userToUpdate, email) {
+  static async updateUser(userToUpdate, email) {
     try {
       await data.Doctor.update(userToUpdate, { where: { email } });
       return userToUpdate;
