@@ -56,7 +56,17 @@ class UserController {
 
   static async userLogin(req, res) {
     try {
-      const { email, userName, password } = req.body;
+      const { account, password } = req.body;
+
+      let email = '';
+      let userName = '';
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (emailRegex.test(account)) {
+        email = account;
+      } else {
+        userName = account;
+      }
 
       if ((!!email && !!userName) || (!email && !userName)) {
         return out(res, 422, 'Please provide only Email or UserName ', null, 'VALIDATION_ERROR');
@@ -65,6 +75,7 @@ class UserController {
       if (!password) {
         return out(res, 422, 'Please provide password ', null, 'VALIDATION_ERROR');
       }
+
       const userExist = await UserService.findUser(email ? { email } : { userName });
       let validPassword;
       if (userExist) {
@@ -80,12 +91,16 @@ class UserController {
       });
       const data = {
         newtoken,
-        email,
+        email: userExist.email,
+        userName: userExist.userName,
         role: 'User',
         logginTime: `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`
       };
       return out(res, 200, 'Login successful', data);
     } catch (error) {
+      return out(res, 500, error.message || error, null, 'SERVER_ERROR');
+    }
+  }
 
   static async verifyUserAccount(req, res) {
     try {
@@ -104,7 +119,6 @@ class UserController {
       if (error.name === 'JsonWebTokenError') {
         return out(res, 400, 'Invalid verification token', null, 'BAD_REQUEST');
       }
-
       return out(res, 500, error.message || error, null, 'SERVER_ERROR');
     }
   }
