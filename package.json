@@ -4,6 +4,8 @@
   "description": "Hospital Management API",
   "main": "index.js",
   "scripts": {
+    "build": "rm -rf ./build && babel ./src/. --out-dir ./build --copy-files",
+    "start": "npm run build && node ./build/app.js",
     "dev": "nodemon --exec babel-node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .js"
