@@ -2,9 +2,6 @@ import { Op } from 'sequelize';
 import { generate, check } from '../helpers/bcrypt';
 import UserService from '../database/services/user';
 import out from '../helpers/response';
-import { sign, verify } from '../helpers/jwt';
-import mailer from '../helpers/mailer';
-import config from '../config';
 
 class UserController {
   static async userSignUp(req, res) {
